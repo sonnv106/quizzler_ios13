@@ -1,24 +1,18 @@
 //
-//  ViewController.swift
+//  QuestionBrain.swift
 //  Quizzler-iOS13
 //
-//  Created by Angela Yu on 12/07/2019.
-//  Copyright © 2019 The App Brewery. All rights reserved.
+//  Created by Nguyen Van Son on 28/06/2023.
+//  Copyright © 2023 The App Brewery. All rights reserved.
 //
 
-import UIKit
-
-class ViewController: UIViewController {
-    
-    @IBOutlet weak var questionLabel: UILabel!
-    @IBOutlet weak var progressBar: UIProgressView!
-    @IBOutlet weak var trueButton: UIButton!
-    @IBOutlet weak var falseButton: UIButton!
+import Foundation
+struct QuestionBrain {
     let questions = [
         Question(q: "A slug's blood is green.", a: "True"),
                 Question(q: "Approximately one quarter of human bones are in the feet.", a: "True"),
                 Question(q: "The total surface area of two human lungs is approximately 70 square metres.", a: "True"),
-                Question(q: "In West Virginia, USA, if you accidentally hit an animal with your car, you are free to take it home to eat.", a: "True"),
+        Question(q: "In West Virginia, USA, if you accidentally hit an animal with your car, you are free to take it home to eat.", a: "True"),
                 Question(q: "In London, UK, if you happen to die in the House of Parliament, you are technically entitled to a state funeral, because the building is considered too sacred a place.", a: "False"),
                 Question(q: "It is illegal to pee in the Ocean in Portugal.", a: "True"),
                 Question(q: "You can lead a cow down stairs but not up stairs.", a: "False"),
@@ -29,38 +23,35 @@ class ViewController: UIViewController {
                 Question(q: "Chocolate affects a dog's heart and nervous system; a few ounces are enough to kill a small dog.", a: "True")
 
     ]
+    var score = 0
     var questionNumber = 0
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        progressBar.progress = 0
-        // Do any additional setup after loading the view.
-        updateUI()
-    }
-
-    @IBAction func answerButtonPressed(_ sender: UIButton) {
-        let userAnswer = sender.currentTitle
-        let actualAnswer = questions[questionNumber].answer
-        
-        if userAnswer == actualAnswer{
-            sender.backgroundColor = UIColor.green
+    mutating func checkAnswer(_ userAnswer: String) -> Bool{
+        if userAnswer == questions[questionNumber].answer {
+            //user got it right
+            score += 1
+            return true
         }else{
-            sender.backgroundColor = UIColor.red
-            
+            //user got it wrong
+            return false
         }
+    }
+    func getQuestionText() -> String{
+        return questions[questionNumber].text
+    }
+    func getProgress() -> Float{
+        return Float(questionNumber + 1)/Float(questions.count)
+    }
+    mutating func nextQuestion(){
         if questionNumber < questions.count - 1{
             questionNumber += 1
             
         }else{
             questionNumber = 0
+            score = 0
         }
-        Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
-//        updateUI()
     }
-    @objc func updateUI(){
-        questionLabel.text = questions[questionNumber].text
-        trueButton.backgroundColor = UIColor.clear
-        falseButton.backgroundColor = UIColor.clear
-        progressBar.progress = Float(questionNumber + 1)/Float(questions.count)
+     func getScore() ->Int{
+        
+        return score
     }
 }
-
